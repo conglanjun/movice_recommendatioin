@@ -68,6 +68,10 @@
                                 {#                                <li><a href="#">Another action</a></li>#}
                                 {#                                <li><a href="#">Something else here</a></li>#}
                                 <li role="separator" class="divider"></li>
+                                {% if movie_user.name == 'admin' %}
+                                    <li><a href="{% url 'movie:user' %}">人员管理</a></li>
+                                    <li role="separator" class="divider"></li>
+                                {% endif %}
                                 <li><a href="{% url 'movie:logout' %}">退出登录</a></li>
                             </ul>
                         </div>

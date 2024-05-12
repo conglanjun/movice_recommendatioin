@@ -30,14 +30,15 @@
             <div class="poster_div">
                 <img src="/static/movie/poster/{{ movie.imdb_id }}.jpg" alt="">
                 <p>{{ movie.name }}
-                    <strong style="color:#e09015">{{ movie.get_score }}</strong>
+                    <strong style="color:#e09015">{{ movie.get_score }}</strong>:
+                    <strong style="color:#e09015">{{ movie.get_test }}</strong>
                 </p>
             </div>
             </a>
         {% endfor %}
     </div>
 
-    <!-- nav视图分页用 不用管-->
+    <!-- nav视图分页用-->
     <nav style="text-align: center;">
         <ul class="pagination">
             {#previous page#}
