@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=100)),
             ],
             options={
-                'db_table': 'Genre',
+                'db_table': 'genre',
             },
         ),
         migrations.CreateModel(
@@ -38,7 +38,7 @@ class Migration(migrations.Migration):
                 ('genre', models.ManyToManyField(to='movie.Genre')),
             ],
             options={
-                'db_table': 'Movie',
+                'db_table': 'movie',
             },
         ),
         migrations.CreateModel(
@@ -50,7 +50,7 @@ class Migration(migrations.Migration):
                 ('mid', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='movie.Movie')),
             ],
             options={
-                'db_table': 'Movie_rating',
+                'db_table': 'movie_rating',
             },
         ),
         migrations.CreateModel(
@@ -63,7 +63,7 @@ class Migration(migrations.Migration):
                 ('rating_movies', models.ManyToManyField(through='movie.Movie_rating', to='movie.Movie')),
             ],
             options={
-                'db_table': 'User',
+                'db_table': 'user',
             },
         ),
         migrations.AddField(

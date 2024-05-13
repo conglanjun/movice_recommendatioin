@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
                 ('movie', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='movie.Movie')),
             ],
             options={
-                'db_table': 'Movie_hot',
+                'db_table': 'movie_hot',
                 'ordering': ['-rating_number'],
             },
         ),

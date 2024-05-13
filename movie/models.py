@@ -7,7 +7,7 @@ class Genre(models.Model):
     name = models.CharField(max_length=100)
 
     class Meta:
-        db_table = 'Genre'
+        db_table = 'genre'
 
     def __str__(self):
         return f"<Genre:{self.name}>"
@@ -37,7 +37,7 @@ class Movie(models.Model):
     movie_similarity=models.ManyToManyField("self",through="Movie_similarity",symmetrical=False)
 
     class Meta:
-        db_table = 'Movie'
+        db_table = 'movie'
 
     def __str__(self):
         return f"<Movie:{self.name},{self.imdb_id}>"
@@ -93,7 +93,7 @@ class User(models.Model):
         return "<USER:( name: {:},password: {:},email: {:} )>".format(self.name, self.password, self.email)
 
     class Meta:
-        db_table = 'User'
+        db_table = 'user'
 
 
 class Movie_rating(models.Model):
@@ -107,7 +107,7 @@ class Movie_rating(models.Model):
     comment = models.TextField(blank=True)
 
     class Meta:
-        db_table = 'Movie_rating'
+        db_table = 'movie_rating'
 
 class Movie_hot(models.Model):
     '''存放最热门的一百部电影'''
@@ -116,5 +116,5 @@ class Movie_hot(models.Model):
     # 评分人数
     rating_number=models.IntegerField()
     class Meta:
-        db_table='Movie_hot'
+        db_table='movie_hot'
         ordering=['-rating_number']
