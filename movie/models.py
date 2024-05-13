@@ -46,6 +46,8 @@ class Movie(models.Model):
         # 定义一个获取平均分的方法，模板中直接调用即可
         # 格式 {'score__avg': 3.125}
         result_dct = self.movie_rating_set.aggregate(Avg('score'))
+        print(result_dct)
+        print(self.movie_rating_set)
         try:
             # 只保留一位小数
             result = round(result_dct['score__avg'], 1)
@@ -59,6 +61,10 @@ class Movie(models.Model):
 
     def get_score_int_range(self):
         return range(int(self.get_score()))
+    
+    def get_test(self):
+        return "hello"
+
 
     def get_genre(self):
         genre_dct = self.genre.all().values('name')

@@ -1,0 +1,14 @@
+{% extends "movie/base.html" %}
+{% block content %}
+<table class="table">
+    <thead>
+    </thead>
+    {% for user in users %}
+    <tr>
+        <td>{{ user.name }}</td>
+        <td>{{ user.email }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

@@ -28,5 +28,7 @@ urlpatterns = [
     path('recommend',views.RecommendMovieView.as_view(),name='recommend'),
     # 导入物品之间的相似度
     # path('calc_movie_similarity',views.calc_movie_similarity,name='calc_similarity')
+    # 人员
+    path('user', views.UserView.as_view(), name='user'),
 
 ]

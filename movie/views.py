@@ -223,6 +223,52 @@ class IndexView(ListView):
         }
 
 
+class UserView(ListView):
+    model = User
+    template_name = 'movie/user.html'
+    paginate_by = 15
+    context_object_name = 'users'
+    ordering = 'id'
+    page_kwarg = 'p'
+
+    def get_queryset(self):
+        # 返回user
+        return User.objects.filter()
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(UserView, self).get_context_data(*kwargs)
+        paginator = context.get('paginator')
+        page_obj = context.get('page_obj')
+        pagination_data = self.get_pagination_data(paginator, page_obj)
+        context.update(pagination_data)
+        # print(context)
+        return context
+
+    def get_pagination_data(self, paginator, page_obj, around_count=2):
+        current_page = page_obj.number
+
+        if current_page <= around_count + 2:
+            left_pages = range(1, current_page)
+            left_has_more = False
+        else:
+            left_pages = range(current_page - around_count, current_page)
+            left_has_more = True
+
+        if current_page >= paginator.num_pages - around_count - 1:
+            right_pages = range(current_page + 1, paginator.num_pages + 1)
+            right_has_more = False
+        else:
+            right_pages = range(current_page + 1, current_page + 1 + around_count)
+            right_has_more = True
+        return {
+            'left_pages': left_pages,
+            'right_pages': right_pages,
+            'current_page': current_page,
+            'left_has_more': left_has_more,
+            'right_has_more': right_has_more
+        }
+
+
 class PopularMovieView(ListView):
     model = Movie_hot
     template_name = 'movie/hot.html'
@@ -594,6 +640,7 @@ class RecommendMovieView(ListView):
         other_users = User.objects.exclude(pk=cur_user_id)
 
         self.cur_user_movie_qs = Movie.objects.filter(user=cur_user)
+        print(Movie.objects.filter(user=cur_user).query)
 
         # 计算当前用户与其他用户评分过的电影交集数
         for user in other_users:
