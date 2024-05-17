@@ -30,5 +30,9 @@ urlpatterns = [
     # path('calc_movie_similarity',views.calc_movie_similarity,name='calc_similarity')
     # 人员
     path('user', views.UserView.as_view(), name='user'),
+    # 人员更新页面
+    path('user_update/<int:pk>', views.UserDetailView.as_view(), name='user_update'),
+    # 人员删除
+    path('user_delete/<int:pk>', views.delete_user, name='delete_user'),
 
 ]

@@ -1,14 +1,75 @@
 {% extends "movie/base.html" %}
 {% block content %}
-<table class="table">
-    <thead>
-    </thead>
-    {% for user in users %}
-    <tr>
-        <td>{{ user.name }}</td>
-        <td>{{ user.email }}</td>
-    </tr>
-    {% endfor %}
-</table>
+<div>
+    <table class="table table-primary table-bordered table-hover">
+        <thead>
+            <tr>
+              <th scope="col">用户名</th>
+              <th scope="col">邮箱</th>
+              <th scope="col">操作</th>
+            </tr>
+          </thead>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>
+                <a href="{% url 'movie:user_update' user.id %}"><input type=button id="updateBtn" class="btn btn-primary" value="更新"></a>
+                <a href="{% url 'movie:delete_user' user.id %}"><input type=button id="updateBtn" class="btn btn-danger" onclick="return deletejob();" value="删除"></button></a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+    <!-- nav视图分页用-->
+    <nav style="text-align: center;">
+        <ul class="pagination">
+            {#previous page#}
+            {% if page_obj.has_previous %}
+                <li><a href="{% url 'movie:user' %}?p={{ page_obj.previous_page_number }}">上一页</a></li>
+            {% else %}
+                <li class="disabled"><a href="javascript:void(0);">上一页</a></li>
+            {% endif %}
+
+            {% if left_has_more %}
+                <li><a href="{% url 'movie:user' %}?p=1">1</a></li>
+                <li><a href="javascript:void(0)">...</a></li>
+            {% endif %}
+
+            {#        左边的page#}
+            {% for left_page in left_pages %}
+                <li><a href="{% url 'movie:user' %}?p={{ left_page }}">{{ left_page }}</a></li>
+            {% endfor %}
+
+            {#    当前的page#}
+            <li class="active"><a href="javascript:void(0);">{{ current_page }}</a></li>
+
+            {#     右边的page#}
+            {% for right_page in right_pages %}
+                <li><a href="{% url 'movie:user' %}?p={{ right_page }}">{{ right_page }}</a></li>
+            {% endfor %}
+            {% if right_has_more %}
+                <li><a href="javascript:void(0)">...</a></li>
+                <li><a href="{% url 'movie:user' %}?p={{ paginator.num_pages }}">{{ paginator.num_pages }}</a></li>
+            {% endif %}
+            {#next page#}
+            {% if page_obj.has_next %}
+                <li><a href="{% url 'movie:user' %}?p={{ page_obj.next_page_number }}">下一页</a></li>
+            {% else %}
+                <li class="disabled"><a href="javascript:void(0);">上一页</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+<script type="text/javascript" language="JavaScript">
+    function deletejob() {
+         if(confirm("确定要删除吗?")) {
+             return true;
+         } else{
+             return false;
+         }
+    }
+</script>
 
 {% endblock %}

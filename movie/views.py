@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.db.models import Avg, Count, Max
 from django.http import HttpResponse, request
 from django.shortcuts import render, redirect, reverse
-from .forms import RegisterForm, LoginForm, CommentForm
+from .forms import RegisterForm, LoginForm, CommentForm, UserUpdateForm
 from django.views.generic import View, ListView, DetailView
 from .models import User, Movie, Genre, Movie_rating, Movie_similarity, Movie_hot
 
@@ -457,6 +457,26 @@ class RegisterView(View):
             return redirect(reverse('movie:register'))
 
 
+# 注册视图
+class UserUpdateView(View):
+    def get(self, request):
+        return render(request, 'movie/user_update.html')
+
+    def post(self, request):
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            # 没毛病，保存
+            form.save()
+            return redirect(reverse('movie:index'))
+        else:
+            # 表单验证失败，重定向到注册页面
+            errors = form.get_errors()
+            for error in errors:
+                messages.info(request, error)
+            print(form.errors.get_json_data())
+            return redirect(reverse('movie:register'))
+
+
 # 登录视图
 class LoginView(View):
     def get(self, request):
@@ -577,6 +597,65 @@ class MovieDetailView(DetailView):
             # 表单没有验证通过
             messages.info(request, "评分不能为空!")
         return redirect(reverse('movie:detail', args=(pk,)))
+
+
+class UserDetailView(DetailView):
+    '''人员详情页面'''
+    model = User
+    template_name = 'movie/user_update.html'
+    # 上下文对象的名称
+    context_object_name = 'user'
+
+    def get_context_data(self, **kwargs):
+        # 重写获取上下文方
+        context = super().get_context_data(**kwargs)
+
+        # 获得用户的pk
+        user_id = self.kwargs['pk']
+        user = User.objects.get(pk=user_id)
+        context.update({'user': user})
+
+        return context
+
+    # 接受评分表单,pk是当前用户的数据库主键id
+    def post(self, request, pk):
+        url = request.get_full_path()
+        form = UserUpdateForm(request.POST)
+        form.is_valid()
+        user = User.objects.filter(id=form.data.get('id')).first()
+        old_password = form.data.get('old_password')
+        if old_password and len(old_password) > 0:
+            if user.password != old_password:
+                messages.info(request, "输入原始密码不正确！!")
+                return redirect(reverse('movie:user'))
+            password_repeat = form.data.get('password_repeat')
+            if form.data.get('password') != password_repeat:
+                messages.info(request, '两次密码输入不一致！')
+                return redirect(reverse('movie:user'))
+        user = User.objects.filter(id=form.cleaned_data.get('id')).first()
+        name = form.data.get('name')
+        email = form.data.get('email')
+        user.name = name
+        user.email = email
+        print(name, email)
+        old_password = form.data.get('old_password')
+        if old_password and len(old_password) > 0:
+            # update password
+            password = form.data.get('password') 
+            user.password = password
+        user.save()
+        messages.info(request, "更新成功!")
+        return redirect(reverse('movie:user'))
+
+
+def delete_user(request, pk):
+    print(pk)
+    user = User.objects.get(pk=pk)
+    user.delete()
+    messages.info(request, f"删除记录成功！")
+    # 跳转回评分历史
+    return redirect(reverse('movie:user'))
+
 
 
 class RatingHistoryView(DetailView):

@@ -31,6 +31,41 @@ class RegisterForm(forms.ModelForm):
         model = User
         fields = ['name', 'password', 'email']
 
+class UserUpdateForm(forms.ModelForm):
+    '''修改用的表单'''
+    password_repeat = forms.CharField(max_length=256)
+    old_password = forms.CharField(max_length=256)
+    name = forms.CharField(max_length=256)
+    id = forms.CharField(max_length=256)
+
+    def get_errors(self):
+        errors = self.errors.get_json_data()
+        errors_lst = []
+        for messages in errors.values():
+            for message_dict in messages:
+                for key, message in message_dict.items():
+                    if key == 'message':
+                        errors_lst.append(message)
+        return errors_lst
+
+    # 普通验证之后的最后一层验证
+    # 验证密码
+    def clean(self):
+        cleaned_data = super(UserUpdateForm, self).clean()
+        # user = User.objects.filter(id=cleaned_data.get('id')).first()
+        # old_password = cleaned_data.get('old_password')
+        # if old_password and len(old_password) > 0:
+        #     if user.password != old_password:
+        #         raise forms.ValidationError(message='输入原始密码不正确！')
+        #     password_repeat = cleaned_data.get('password_repeat')
+        #     if cleaned_data.get('password') != password_repeat:
+        #         raise forms.ValidationError(message='两次密码输入不一致！')
+        return cleaned_data
+
+    class Meta:
+        model = User
+        fields = ['id', 'name', 'email']
+
 
 class LoginForm(forms.ModelForm):
     '''
